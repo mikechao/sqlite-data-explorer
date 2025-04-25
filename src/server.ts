@@ -6,13 +6,15 @@ import sqlite3 from 'sqlite3';
 import { ListTablesTool } from './tools/ListTablesTool';
 import { DescribeTableTool } from './tools/DescribeTableTool';
 import { IndexesForTableTool } from './tools/IndexesForTableTool';
+import { ForeignKeyForTableTool } from './tools/ForeignKeyForTableTool';
 
 export class SqliteMcpServer {
   private server: McpServer;
   private db!: Database<sqlite3.Database, sqlite3.Statement>;
   private listTablesTool!: ListTablesTool;
   private describeTableTool!: DescribeTableTool;
-  private indexesForTableTool!: IndexesForTableTool
+  private indexesForTableTool!: IndexesForTableTool;
+  private foreignKeyForTableTool!: ForeignKeyForTableTool;
   public ready: Promise<void>;
 
   constructor(dbPath: string) {
@@ -35,6 +37,7 @@ export class SqliteMcpServer {
         this.listTablesTool = new ListTablesTool(db);
         this.describeTableTool = new DescribeTableTool(db);
         this.indexesForTableTool = new IndexesForTableTool(db);
+        this.foreignKeyForTableTool = new ForeignKeyForTableTool(db);
 
         this.setupTools();
       })
@@ -62,6 +65,12 @@ export class SqliteMcpServer {
       this.indexesForTableTool.description,
       this.indexesForTableTool.inputSchema.shape,
       this.indexesForTableTool.execute.bind(this.indexesForTableTool),
+    );
+    this.server.tool(
+      this.foreignKeyForTableTool.name,
+      this.foreignKeyForTableTool.description,
+      this.foreignKeyForTableTool.inputSchema.shape,
+      this.foreignKeyForTableTool.execute.bind(this.foreignKeyForTableTool),
     )
   }
 

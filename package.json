@@ -1,0 +1,30 @@
+{
+  "name": "sqlite-data-explorer",
+  "version": "0.5.0",
+  "description": "",
+  "author": "",
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "clean": "shx rm -rf dist && shx mkdir dist",
+    "build": "npm run clean && tsc && shx chmod +x dist/*.js",
+    "build:watch": "tsc --sourceMap -p tsconfig.json -w",
+    "prepare": "npm run build",
+    "lint": "eslint . --ext .ts,.js,.mjs,.cjs --fix",
+    "lint:check": "eslint . --ext .ts,.js,.mjs,.cjs",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run lint:check && npm run typecheck"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.2",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^4.12.0",
+    "@types/node": "^22.15.2",
+    "eslint": "^9.24.0",
+    "eslint-plugin-format": "^1.0.1",
+    "shx": "^0.4.0"
+  }
+}

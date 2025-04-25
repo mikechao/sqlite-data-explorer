@@ -15,7 +15,7 @@ export class ListTablesTool extends BaseTool<typeof listTablesInputSchema, any> 
   }
 
   public async executeCore() {
-    const tables = await this.db.all('SELECT name FROM sqlite_master WHERE type="table"');
+    const tables = await this.db.all(`SELECT name FROM sqlite_master WHERE type="table" AND name NOT LIKE 'sqlite_%';`);
     return {
       content: tables.map(table => ({
         type: 'text' as const,

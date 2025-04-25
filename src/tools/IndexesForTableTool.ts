@@ -18,10 +18,23 @@ export class IndexesForTableTool extends BaseTool<typeof indexesForTableInputSch
 
   public async executeCore(input: z.infer<typeof indexesForTableInputSchema>) {
     const { tableName } = input;
-    const indexes = await this.db.all(`PRAGMA index_list(${tableName})`);
-    const indexDescriptions = indexes.map((index) => {
-      return `${index.name} (${index.unique ? 'UNIQUE' : ''})`;
-    }).join('\n');
+    const indexes = await this.db.all(`PRAGMA index_list("${tableName}")`);
+    if (!indexes.length) {
+      return {
+        content: [
+          {
+            type: 'text' as const,
+            text: `No indexes found for table "${tableName}".`,
+          }
+        ]
+      };
+    }
+    const indexDescriptions = (await Promise.all(
+      indexes.map(async (index) => {
+        const columns = await this.indexInfo(index.name);
+        return `${index.name} (${index.unique ? 'UNIQUE' : 'NON-UNIQUE'}): ${columns}`;
+      })
+    )).join('\n');
     const text = `The table "${tableName}" has the following indexes:\n${indexDescriptions}`;
     return {
       content: [
@@ -31,5 +44,10 @@ export class IndexesForTableTool extends BaseTool<typeof indexesForTableInputSch
         }
       ]
     };
-  }  
+  }
+
+  private async indexInfo(indexName: string) {
+    const indexInfo = await this.db.all(`PRAGMA index_info(${indexName})`);
+    return indexInfo.map((column) => column.name).join(', ');
+  }
 }

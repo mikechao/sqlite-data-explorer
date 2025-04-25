@@ -1,10 +1,10 @@
 import type { Database } from 'sqlite';
 import type sqlite3 from 'sqlite3';
-import {z} from 'zod';
-import {BaseTool} from './BaseTool';
+import { z } from 'zod';
+import { BaseTool } from './BaseTool';
 
 const foreignKeyForTableInputSchema = z.object({
-  tableName: z.string().describe('The name of the table to get indexes for.')
+  tableName: z.string().describe('The name of the table to get indexes for.'),
 });
 
 export class ForeignKeyForTableTool extends BaseTool<typeof foreignKeyForTableInputSchema, any> {
@@ -25,23 +25,23 @@ export class ForeignKeyForTableTool extends BaseTool<typeof foreignKeyForTableIn
           {
             type: 'text' as const,
             text: `No foreign keys found for table "${tableName}".`,
-          }
-        ]
+          },
+        ],
       };
     }
     const foreignKeyDescriptions = (await Promise.all(
       foreignKeys.map(async (foreignKey) => {
         return `${foreignKey.from} -> ${foreignKey.table}(${foreignKey.to})`;
-      })
+      }),
     )).join('\n');
     const text = `The table "${tableName}" has the following foreign keys:\n${foreignKeyDescriptions}`;
     return {
       content: [
         {
           type: 'text' as const,
-          text: text,
-        }
-      ]
+          text,
+        },
+      ],
     };
   }
 }

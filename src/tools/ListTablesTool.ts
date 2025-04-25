@@ -16,15 +16,15 @@ export class ListTablesTool extends BaseTool<typeof listTablesInputSchema, any> 
 
   public async executeCore() {
     const tables = await this.db.all(`SELECT name FROM sqlite_master WHERE type="table" AND name NOT LIKE 'sqlite_%';`);
-    const tableNames = tables.map((table) => table.name).join('\n')
-    const text = `The database contains the following tables:\n${tableNames}`
+    const tableNames = tables.map(table => table.name).join('\n');
+    const text = `The database contains the following tables:\n${tableNames}`;
     return {
       content: [
         {
           type: 'text' as const,
-          text: text,
-        }
-      ]
+          text,
+        },
+      ],
     };
   }
 }

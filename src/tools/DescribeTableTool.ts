@@ -1,10 +1,10 @@
 import type { Database } from 'sqlite';
 import type sqlite3 from 'sqlite3';
-import {z} from 'zod';
-import {BaseTool} from './BaseTool';
+import { z } from 'zod';
+import { BaseTool } from './BaseTool';
 
 const describeTableInputSchema = z.object({
-  tableName: z.string().describe('The name of the table to describe.')
+  tableName: z.string().describe('The name of the table to describe.'),
 });
 
 export class DescribeTableTool extends BaseTool<typeof describeTableInputSchema, any> {
@@ -27,9 +27,9 @@ export class DescribeTableTool extends BaseTool<typeof describeTableInputSchema,
       content: [
         {
           type: 'text' as const,
-          text: text,
-        }
-      ]
+          text,
+        },
+      ],
     };
-  }  
+  }
 }

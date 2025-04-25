@@ -3,10 +3,10 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
-import { ListTablesTool } from './tools/ListTablesTool';
 import { DescribeTableTool } from './tools/DescribeTableTool';
-import { IndexesForTableTool } from './tools/IndexesForTableTool';
 import { ForeignKeyForTableTool } from './tools/ForeignKeyForTableTool';
+import { IndexesForTableTool } from './tools/IndexesForTableTool';
+import { ListTablesTool } from './tools/ListTablesTool';
 import { ReadQueryTool } from './tools/ReadQueryTool';
 
 export class SqliteMcpServer {
@@ -80,7 +80,7 @@ export class SqliteMcpServer {
       this.readyQueryTool.description,
       this.readyQueryTool.inputSchema.shape,
       this.readyQueryTool.execute.bind(this.readyQueryTool),
-    )
+    );
   }
 
   private async initDatabase(dbPath: string) {

@@ -4,11 +4,13 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import { ListTablesTool } from './tools/ListTablesTool';
+import { DescribeTableTool } from './tools/DescribeTableTool';
 
 export class SqliteMcpServer {
   private server: McpServer;
   private db!: Database<sqlite3.Database, sqlite3.Statement>;
   private listTablesTool!: ListTablesTool;
+  private describeTableTool!: DescribeTableTool;
   public ready: Promise<void>;
 
   constructor(dbPath: string) {
@@ -29,6 +31,7 @@ export class SqliteMcpServer {
       .then((db) => {
         this.db = db;
         this.listTablesTool = new ListTablesTool(db);
+        this.describeTableTool = new DescribeTableTool(db);
 
         this.setupTools();
       })
@@ -45,6 +48,12 @@ export class SqliteMcpServer {
       this.listTablesTool.inputSchema.shape,
       this.listTablesTool.execute.bind(this.listTablesTool),
     );
+    this.server.tool(
+      this.describeTableTool.name,
+      this.describeTableTool.description,
+      this.describeTableTool.inputSchema.shape,
+      this.describeTableTool.execute.bind(this.describeTableTool),
+    )
   }
 
   private async initDatabase(dbPath: string) {

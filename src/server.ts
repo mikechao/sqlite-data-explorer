@@ -7,6 +7,7 @@ import { ListTablesTool } from './tools/ListTablesTool';
 import { DescribeTableTool } from './tools/DescribeTableTool';
 import { IndexesForTableTool } from './tools/IndexesForTableTool';
 import { ForeignKeyForTableTool } from './tools/ForeignKeyForTableTool';
+import { ReadQueryTool } from './tools/ReadQueryTool';
 
 export class SqliteMcpServer {
   private server: McpServer;
@@ -15,6 +16,7 @@ export class SqliteMcpServer {
   private describeTableTool!: DescribeTableTool;
   private indexesForTableTool!: IndexesForTableTool;
   private foreignKeyForTableTool!: ForeignKeyForTableTool;
+  private readyQueryTool!: ReadQueryTool;
   public ready: Promise<void>;
 
   constructor(dbPath: string) {
@@ -38,6 +40,7 @@ export class SqliteMcpServer {
         this.describeTableTool = new DescribeTableTool(db);
         this.indexesForTableTool = new IndexesForTableTool(db);
         this.foreignKeyForTableTool = new ForeignKeyForTableTool(db);
+        this.readyQueryTool = new ReadQueryTool(db);
 
         this.setupTools();
       })
@@ -71,6 +74,12 @@ export class SqliteMcpServer {
       this.foreignKeyForTableTool.description,
       this.foreignKeyForTableTool.inputSchema.shape,
       this.foreignKeyForTableTool.execute.bind(this.foreignKeyForTableTool),
+    );
+    this.server.tool(
+      this.readyQueryTool.name,
+      this.readyQueryTool.description,
+      this.readyQueryTool.inputSchema.shape,
+      this.readyQueryTool.execute.bind(this.readyQueryTool),
     )
   }
 

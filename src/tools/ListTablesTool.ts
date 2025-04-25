@@ -3,7 +3,7 @@ import type sqlite3 from 'sqlite3';
 import { z } from 'zod';
 import { BaseTool } from './BaseTool';
 
-const listTablesInputSchema = z.void();
+const listTablesInputSchema = z.object({});
 
 export class ListTablesTool extends BaseTool<typeof listTablesInputSchema, any> {
   public readonly name = 'list_tables';

@@ -3,10 +3,12 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
+import { ListTablesTool } from './tools/ListTablesTool';
 
 export class SqliteMcpServer {
   private server: McpServer;
   private db!: Database<sqlite3.Database, sqlite3.Statement>;
+  private listTablesTool!: ListTablesTool;
   public ready: Promise<void>;
 
   constructor(dbPath: string) {
@@ -26,6 +28,9 @@ export class SqliteMcpServer {
     this.ready = this.initDatabase(dbPath)
       .then((db) => {
         this.db = db;
+        this.listTablesTool = new ListTablesTool(db);
+
+        this.setupTools();
       })
       .catch((error) => {
         console.error(`Error initializing database: ${error}`);
@@ -33,7 +38,16 @@ export class SqliteMcpServer {
       });
   }
 
-  public async initDatabase(dbPath: string) {
+  private setupTools(): void {
+    this.server.tool(
+      this.listTablesTool.name,
+      this.listTablesTool.description,
+      this.listTablesTool.inputSchema.shape,
+      this.listTablesTool.execute.bind(this.listTablesTool),
+    );
+  }
+
+  private async initDatabase(dbPath: string) {
     const db = await open({
       filename: dbPath,
       driver: sqlite3.Database,

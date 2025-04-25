@@ -1,8 +1,13 @@
+import type { Database } from 'sqlite';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { open } from 'sqlite';
+import sqlite3 from 'sqlite3';
 
 export class SqliteMcpServer {
   private server: McpServer;
+  private db!: Database<sqlite3.Database, sqlite3.Statement>;
+  public ready: Promise<void>;
 
   constructor(dbPath: string) {
     this.server = new McpServer(
@@ -18,6 +23,22 @@ export class SqliteMcpServer {
         },
       },
     );
+    this.ready = this.initDatabase(dbPath)
+      .then((db) => {
+        this.db = db;
+      })
+      .catch((error) => {
+        console.error(`Error initializing database: ${error}`);
+        throw error;
+      });
+  }
+
+  public async initDatabase(dbPath: string) {
+    const db = await open({
+      filename: dbPath,
+      driver: sqlite3.Database,
+    });
+    return db;
   }
 
   public async start() {

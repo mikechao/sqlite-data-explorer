@@ -6,9 +6,9 @@ export function getExplorerPrompt() {
     + `\n'foreign_key_for_table': Get foreign keys for a table in the database, giving you the relationships between tables.`
     + `\n'indexes_for_table': Get indexes for a table in the database, giving you the indexes and their types.`
     + `\n'list_tables': List all tables in the database.`
-    + `\n'read_query': Execute a SELECT query on the SQLite database, giving you the results of the query.`
+    + `\n'execute_query': Execute a query on the SQLite database, giving you the results of the query.`
     + `\n1. Examine the database schema and understand the relationships between tables.`
-    + `\na. Use the tools available to you to explore the database schema.`
+    + `\n   a. Use the tools available to you to explore the database schema.`
     + `\n2. Come up with a list of potential dashboards that you can create based on the data in the database.`
     + `\n3. Pause for user input:`
     + `\n   a. Summarize the potential dashboards you can create.`

@@ -5,10 +5,10 @@ import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import { getExplorerPrompt } from './prompts/Explorer';
 import { DescribeTableTool } from './tools/DescribeTableTool';
+import { ExecuteQueryTool } from './tools/ExecuteQueryTool';
 import { ForeignKeyForTableTool } from './tools/ForeignKeyForTableTool';
 import { IndexesForTableTool } from './tools/IndexesForTableTool';
 import { ListTablesTool } from './tools/ListTablesTool';
-import { ReadQueryTool } from './tools/ReadQueryTool';
 
 export class SqliteMcpServer {
   private server: McpServer;
@@ -17,7 +17,7 @@ export class SqliteMcpServer {
   private describeTableTool!: DescribeTableTool;
   private indexesForTableTool!: IndexesForTableTool;
   private foreignKeyForTableTool!: ForeignKeyForTableTool;
-  private readyQueryTool!: ReadQueryTool;
+  private readyQueryTool!: ExecuteQueryTool;
   public ready: Promise<void>;
 
   constructor(dbPath: string) {
@@ -41,7 +41,7 @@ export class SqliteMcpServer {
         this.describeTableTool = new DescribeTableTool(db);
         this.indexesForTableTool = new IndexesForTableTool(db);
         this.foreignKeyForTableTool = new ForeignKeyForTableTool(db);
-        this.readyQueryTool = new ReadQueryTool(db);
+        this.readyQueryTool = new ExecuteQueryTool(db);
 
         this.setupTools();
         this.setupPrompt();

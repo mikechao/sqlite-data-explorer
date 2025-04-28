@@ -3,6 +3,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
+import { getExplorerPrompt } from './prompts/Explorer';
 import { DescribeTableTool } from './tools/DescribeTableTool';
 import { ForeignKeyForTableTool } from './tools/ForeignKeyForTableTool';
 import { IndexesForTableTool } from './tools/IndexesForTableTool';
@@ -43,6 +44,7 @@ export class SqliteMcpServer {
         this.readyQueryTool = new ReadQueryTool(db);
 
         this.setupTools();
+        this.setupPrompt();
       })
       .catch((error) => {
         console.error(`Error initializing database: ${error}`);
@@ -80,6 +82,27 @@ export class SqliteMcpServer {
       this.readyQueryTool.description,
       this.readyQueryTool.inputSchema.shape,
       this.readyQueryTool.execute.bind(this.readyQueryTool),
+    );
+  }
+
+  private setupPrompt(): void {
+    this.server.prompt(
+      'data-explorer',
+      'Explores the SQLite database and create a dashboard.',
+      {},
+      async () => {
+        return {
+          messages: [
+            {
+              role: 'user',
+              content: {
+                type: 'text',
+                text: getExplorerPrompt(),
+              },
+            },
+          ],
+        };
+      },
     );
   }
 

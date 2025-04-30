@@ -17,5 +17,6 @@ export function getExplorerPrompt() {
     + `\n4. Once the user has made a selection`
     + `\n   a. Execute the query and get the data.`
     + `\n   b. Analyze the data and create an interactive dashboard artifact.`
+    + `\n   c. Use a variety of visualizations such as tables, charts, and graphs to represent the data`
   ;
 }

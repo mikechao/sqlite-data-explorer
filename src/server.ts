@@ -4,6 +4,7 @@ import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js'
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import { getExplorerPrompt } from './prompts/Explorer';
+import { AppendInsightsTool } from './tools/AppendInsightsTool';
 import { DescribeTableTool } from './tools/DescribeTableTool';
 import { ExecuteQueryTool } from './tools/ExecuteQueryTool';
 import { ForeignKeyForTableTool } from './tools/ForeignKeyForTableTool';
@@ -18,6 +19,8 @@ export class SqliteMcpServer {
   private indexesForTableTool!: IndexesForTableTool;
   private foreignKeyForTableTool!: ForeignKeyForTableTool;
   private readyQueryTool!: ExecuteQueryTool;
+  private appendInsightsTool!: AppendInsightsTool;
+  private insights: string[];
   public ready: Promise<void>;
 
   constructor(dbPath: string) {
@@ -42,6 +45,8 @@ export class SqliteMcpServer {
         this.indexesForTableTool = new IndexesForTableTool(db);
         this.foreignKeyForTableTool = new ForeignKeyForTableTool(db);
         this.readyQueryTool = new ExecuteQueryTool(db);
+        this.insights = [];
+        this.appendInsightsTool = new AppendInsightsTool(this.insights, this.server);
 
         this.setupTools();
         this.setupPrompt();
@@ -82,6 +87,12 @@ export class SqliteMcpServer {
       this.readyQueryTool.description,
       this.readyQueryTool.inputSchema.shape,
       this.readyQueryTool.execute.bind(this.readyQueryTool),
+    );
+    this.server.tool(
+      this.appendInsightsTool.name,
+      this.appendInsightsTool.description,
+      this.appendInsightsTool.inputSchema.shape,
+      this.appendInsightsTool.execute.bind(this.appendInsightsTool),
     );
   }
 

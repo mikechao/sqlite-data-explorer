@@ -1,6 +1,7 @@
 import type { Database } from 'sqlite';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import { ListResourcesRequestSchema, ReadResourceRequestSchema } from '@modelcontextprotocol/sdk/types';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 import { getExplorerPrompt } from './prompts/Explorer';
@@ -20,7 +21,7 @@ export class SqliteMcpServer {
   private foreignKeyForTableTool!: ForeignKeyForTableTool;
   private readyQueryTool!: ExecuteQueryTool;
   private appendInsightsTool!: AppendInsightsTool;
-  private insights: string[];
+  private insights: string[] = [];
   public ready: Promise<void>;
 
   constructor(dbPath: string) {
@@ -50,6 +51,7 @@ export class SqliteMcpServer {
 
         this.setupTools();
         this.setupPrompt();
+        this.setupResources();
       })
       .catch((error) => {
         console.error(`Error initializing database: ${error}`);
@@ -115,6 +117,32 @@ export class SqliteMcpServer {
         };
       },
     );
+  }
+
+  private setupResources(): void {
+    this.server.server.setRequestHandler(ListResourcesRequestSchema, async () => ({
+      resources: [
+        {
+          uri: 'memo://insights',
+          mimeType: 'text/plain',
+          name: 'Business Insights',
+        },
+      ],
+    }));
+
+    this.server.server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+      const uri = request.params.uri.toString();
+      if (uri.startsWith('memo://')) {
+        return {
+          content: this.insights.join('\n'),
+          mimeType: 'text/plain',
+        };
+      }
+      return {
+        content: [{ type: 'text', text: `Resource not found: ${uri}` }],
+        isError: true,
+      };
+    });
   }
 
   private async initDatabase(dbPath: string) {

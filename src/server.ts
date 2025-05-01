@@ -1,4 +1,5 @@
 import type { Database } from 'sqlite';
+import { get } from 'node:http';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { ListResourcesRequestSchema, ReadResourceRequestSchema } from '@modelcontextprotocol/sdk/types.js';
@@ -121,6 +122,15 @@ export class SqliteMcpServer {
     );
   }
 
+  private getInsights(): string {
+    if (this.insights.length === 0) {
+      return 'No insights available.';
+    }
+    const text = `📊 Business Intelligence Memo 📊\nKey Insights Discovered:\n${
+      this.insights.map((insight, index) => `\n${index + 1}. ${insight}`).join('\n')}`;
+    return text;
+  }
+
   private setupResources(): void {
     this.server.server.setRequestHandler(ListResourcesRequestSchema, async () => ({
       resources: [
@@ -136,8 +146,13 @@ export class SqliteMcpServer {
       const uri = request.params.uri.toString();
       if (uri.startsWith('memo://')) {
         return {
-          content: this.insights.join('\n'),
-          mimeType: 'text/plain',
+          contents: [
+            {
+              uri,
+              mimeType: 'text/plain',
+              text: this.getInsights(),
+            },
+          ],
         };
       }
       return {

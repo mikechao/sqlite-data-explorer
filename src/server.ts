@@ -35,6 +35,7 @@ export class SqliteMcpServer {
         capabilities: {
           tools: {},
           logging: {},
+          resources: {},
         },
       },
     );

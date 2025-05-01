@@ -1,16 +1,16 @@
 import type { Database } from 'sqlite';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import { ListResourcesRequestSchema, ReadResourceRequestSchema } from '@modelcontextprotocol/sdk/types';
+import { ListResourcesRequestSchema, ReadResourceRequestSchema } from '@modelcontextprotocol/sdk/types.js';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
-import { getExplorerPrompt } from './prompts/Explorer';
-import { AppendInsightsTool } from './tools/AppendInsightsTool';
-import { DescribeTableTool } from './tools/DescribeTableTool';
-import { ExecuteQueryTool } from './tools/ExecuteQueryTool';
-import { ForeignKeyForTableTool } from './tools/ForeignKeyForTableTool';
-import { IndexesForTableTool } from './tools/IndexesForTableTool';
-import { ListTablesTool } from './tools/ListTablesTool';
+import { getExplorerPrompt } from './prompts/Explorer.js';
+import { AppendInsightsTool } from './tools/AppendInsightsTool.js';
+import { DescribeTableTool } from './tools/DescribeTableTool.js';
+import { ExecuteQueryTool } from './tools/ExecuteQueryTool.js';
+import { ForeignKeyForTableTool } from './tools/ForeignKeyForTableTool.js';
+import { IndexesForTableTool } from './tools/IndexesForTableTool.js';
+import { ListTablesTool } from './tools/ListTablesTool.js';
 
 export class SqliteMcpServer {
   private server: McpServer;

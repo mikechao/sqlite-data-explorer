@@ -1,6 +1,6 @@
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp';
+import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
-import { BaseTool } from './BaseTool';
+import { BaseTool } from './BaseTool.js';
 
 const appendInsightsInputSchema = z.object({
   insights: z.string().describe('Business insight discovered from data analysis'),

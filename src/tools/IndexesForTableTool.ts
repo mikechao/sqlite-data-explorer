@@ -1,7 +1,7 @@
 import type { Database } from 'sqlite';
 import type sqlite3 from 'sqlite3';
 import { z } from 'zod';
-import { BaseTool } from './BaseTool';
+import { BaseTool } from './BaseTool.js';
 
 const indexesForTableInputSchema = z.object({
   tableName: z.string().describe('The name of the table to get indexes for.'),

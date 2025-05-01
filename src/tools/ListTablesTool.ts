@@ -1,7 +1,7 @@
 import type { Database } from 'sqlite';
 import type sqlite3 from 'sqlite3';
 import { z } from 'zod';
-import { BaseTool } from './BaseTool';
+import { BaseTool } from './BaseTool.js';
 
 const listTablesInputSchema = z.object({});
 

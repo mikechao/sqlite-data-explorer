@@ -1,5 +1,6 @@
 {
   "name": "sqlite-data-explorer",
+  "type": "module",
   "version": "0.5.0",
   "description": "",
   "author": "",

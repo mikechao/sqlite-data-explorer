@@ -6,6 +6,7 @@ export function getExplorerPrompt() {
     + `\n'foreign_key_for_table': Get foreign keys for a table in the database, giving you the relationships between tables.`
     + `\n'indexes_for_table': Get indexes for a table in the database, giving you the indexes and their types.`
     + `\n'list_tables': List all tables in the database.`
+    + `\n'append_insights': Append a business insight to the memo, which is a list of insights discovered from data analysis.`
     + `\n'execute_query': Execute a query on the SQLite database, giving you the results of the query.`
     + `\n1. Examine the database schema and understand the relationships between tables.`
     + `\n   a. Use the tools available to you to explore the database schema.`
@@ -17,6 +18,7 @@ export function getExplorerPrompt() {
     + `\n4. Once the user has made a selection`
     + `\n   a. Execute the query and get the data.`
     + `\n   b. Analyze the data and create an interactive dashboard artifact.`
-    + `\n   c. Use a variety of visualizations such as tables, charts, and graphs to represent the data`
+    + `\n   c. Use the append_insights tool to add any business insights discovered from the data analysis to the memo.`
+    + `\n   d. Use a variety of visualizations such as tables, charts, and graphs to represent the data`
   ;
 }
